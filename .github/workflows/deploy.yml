@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: arc-runner-set
+    container:
+      image: ghcr.io/sas-daftech/kraken/ci:latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Determine released version
+        id: version
+        run: |
+          RAW_VERSION=$(grep -m1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+          RELEASE_VERSION=${RAW_VERSION%-SNAPSHOT}
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Set release version
+        run: mvn versions:set -DnewVersion=${{ steps.version.outputs.version }} -DgenerateBackupPoms=false -q
+
+      - name: Build
+        run: mvn clean package -DskipTests -q
+
+      - name: Publish to GitHub Packages
+        run: |
+          mkdir -p ~/.m2
+          printf '<settings><servers><server><id>github</id><username>%s</username><password>%s</password></server></servers></settings>' "$GITHUB_ACTOR" "$GITHUB_TOKEN" > ~/.m2/settings.xml
+          mvn deploy -DskipTests -q
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
