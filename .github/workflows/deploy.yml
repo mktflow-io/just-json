@@ -12,6 +12,7 @@ jobs:
     container:
       image: ghcr.io/sas-daftech/kraken/ci:latest
     permissions:
+      contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
