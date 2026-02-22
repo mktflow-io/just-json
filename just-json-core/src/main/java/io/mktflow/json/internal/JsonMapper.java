@@ -15,7 +15,7 @@ public final class JsonMapper {
     private JsonMapper() {}
 
     public static String toString(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonString s) {
@@ -28,39 +28,39 @@ public final class JsonMapper {
         if (value instanceof JsonValue.JsonNumber n) {
             return Integer.parseInt(n.value());
         }
-        throw new JsonException("Expected JSON number but got " + value.getClass().getSimpleName());
+        throw new JsonException("Expected JSON number but got " + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 
     public static long toLong(JsonValue value) {
         if (value instanceof JsonValue.JsonNumber n) {
             return Long.parseLong(n.value());
         }
-        throw new JsonException("Expected JSON number but got " + value.getClass().getSimpleName());
+        throw new JsonException("Expected JSON number but got " + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 
     public static double toDouble(JsonValue value) {
         if (value instanceof JsonValue.JsonNumber n) {
             return Double.parseDouble(n.value());
         }
-        throw new JsonException("Expected JSON number but got " + value.getClass().getSimpleName());
+        throw new JsonException("Expected JSON number but got " + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 
     public static float toFloat(JsonValue value) {
         if (value instanceof JsonValue.JsonNumber n) {
             return Float.parseFloat(n.value());
         }
-        throw new JsonException("Expected JSON number but got " + value.getClass().getSimpleName());
+        throw new JsonException("Expected JSON number but got " + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 
     public static boolean toBoolean(JsonValue value) {
         if (value instanceof JsonValue.JsonBoolean b) {
             return b.value();
         }
-        throw new JsonException("Expected JSON boolean but got " + value.getClass().getSimpleName());
+        throw new JsonException("Expected JSON boolean but got " + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 
     public static Integer toIntegerBoxed(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -70,7 +70,7 @@ public final class JsonMapper {
     }
 
     public static Long toLongBoxed(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -80,7 +80,7 @@ public final class JsonMapper {
     }
 
     public static Double toDoubleBoxed(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -90,7 +90,7 @@ public final class JsonMapper {
     }
 
     public static Float toFloatBoxed(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -100,7 +100,7 @@ public final class JsonMapper {
     }
 
     public static Boolean toBooleanBoxed(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonBoolean b) {
@@ -110,7 +110,7 @@ public final class JsonMapper {
     }
 
     public static BigDecimal toBigDecimal(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -120,7 +120,7 @@ public final class JsonMapper {
     }
 
     public static BigInteger toBigInteger(JsonValue value) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonNumber n) {
@@ -130,7 +130,7 @@ public final class JsonMapper {
     }
 
     public static <E extends Enum<E>> E toEnum(JsonValue value, Class<E> enumClass) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonString s) {
@@ -140,7 +140,7 @@ public final class JsonMapper {
     }
 
     public static <E extends Enum<E>> E toEnum(JsonValue value, Map<String, E> lookup) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonString s) {
@@ -154,7 +154,7 @@ public final class JsonMapper {
     }
 
     public static <T> List<T> toList(JsonValue value, Function<JsonValue, T> elementMapper) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonArray arr) {
@@ -168,7 +168,7 @@ public final class JsonMapper {
     }
 
     public static <V> Map<String, V> toMap(JsonValue value, Function<JsonValue, V> valueMapper) {
-        if (value instanceof JsonValue.JsonNull) {
+        if (value == null || value instanceof JsonValue.JsonNull) {
             return null;
         }
         if (value instanceof JsonValue.JsonObject obj) {
