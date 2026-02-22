@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: arc-runner-set
+    container:
+      image: ghcr.io/sas-daftech/kraken/ci:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and test
+        run: mvn clean test -q
