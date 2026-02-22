@@ -12,6 +12,13 @@
     <name>just-json</name>
     <description>Zero-dependency, zero-reflection JSON library for Java records</description>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/mktflow-io/just-json</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>just-json-core</module>
         <module>just-json-processor</module>

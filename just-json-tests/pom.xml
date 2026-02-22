@@ -14,6 +14,10 @@
     <name>just-json-tests</name>
     <description>Integration tests for just-json</description>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.mktflow</groupId>
