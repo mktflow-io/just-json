@@ -13,7 +13,6 @@ jobs:
       image: ghcr.io/sas-daftech/kraken/ci:latest
     permissions:
       contents: write
-      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -84,15 +83,6 @@ jobs:
 
       - name: Build and test
         run: mvn clean package -q
-
-      - name: Publish to GitHub Packages
-        run: |
-          mkdir -p ~/.m2
-          printf '<settings><servers><server><id>github</id><username>%s</username><password>%s</password></server></servers></settings>' "$GITHUB_ACTOR" "$GITHUB_TOKEN" > ~/.m2/settings.xml
-          mvn deploy -DskipTests -q
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
 
       - name: Generate release notes
         id: notes
