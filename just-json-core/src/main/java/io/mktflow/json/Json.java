@@ -48,4 +48,8 @@ public final class Json {
         JsonValue value = JsonParser.parse(json);
         return deserializer.apply(value);
     }
+
+    public static JsonValue parse(String json) {
+        return JsonParser.parse(json);
+    }
 }

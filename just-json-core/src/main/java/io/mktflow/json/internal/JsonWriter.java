@@ -123,6 +123,14 @@ public final class JsonWriter {
         }
     }
 
+    public static <E extends Enum<E>> void writeEnum(E value, StringBuilder sb, Map<E, String> names) {
+        if (value == null) {
+            sb.append("null");
+        } else {
+            writeString(names.get(value), sb);
+        }
+    }
+
     public static <T> void writeList(List<T> list, StringBuilder sb, BiConsumer<T, StringBuilder> elementWriter) {
         if (list == null) {
             sb.append("null");
