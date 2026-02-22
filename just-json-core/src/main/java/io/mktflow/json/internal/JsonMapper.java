@@ -139,6 +139,20 @@ public final class JsonMapper {
         throw new JsonException("Expected JSON string for enum but got " + value.getClass().getSimpleName());
     }
 
+    public static <E extends Enum<E>> E toEnum(JsonValue value, Map<String, E> lookup) {
+        if (value instanceof JsonValue.JsonNull) {
+            return null;
+        }
+        if (value instanceof JsonValue.JsonString s) {
+            E result = lookup.get(s.value());
+            if (result == null) {
+                throw new JsonException("Unknown enum value: " + s.value());
+            }
+            return result;
+        }
+        throw new JsonException("Expected JSON string for enum but got " + value.getClass().getSimpleName());
+    }
+
     public static <T> List<T> toList(JsonValue value, Function<JsonValue, T> elementMapper) {
         if (value instanceof JsonValue.JsonNull) {
             return null;
