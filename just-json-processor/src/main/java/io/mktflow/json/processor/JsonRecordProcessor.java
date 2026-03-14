@@ -6,6 +6,7 @@ import io.mktflow.json.JsonRecord;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SupportedAnnotationTypes("io.mktflow.json.JsonRecord")
+@SupportedOptions("json.registry.package")
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
 public class JsonRecordProcessor extends AbstractProcessor {
 
@@ -518,9 +520,9 @@ public class JsonRecordProcessor extends AbstractProcessor {
 
     private void generateRegistry() {
         try {
-            // Determine a common package or use the first adapter's package
-            String registryPackage = "";
-            if (!adapterClassNames.isEmpty()) {
+            adapterClassNames.sort(String::compareTo);
+            String registryPackage = processingEnv.getOptions().getOrDefault("json.registry.package", "");
+            if (registryPackage.isEmpty() && !adapterClassNames.isEmpty()) {
                 String first = adapterClassNames.getFirst();
                 int lastDot = first.lastIndexOf('.');
                 if (lastDot > 0) {
