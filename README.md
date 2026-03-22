@@ -22,9 +22,7 @@ Serialize and deserialize via the `Json` facade:
 import io.mktflow.json.Json;
 
 // Initialize adapters once at startup
-PersonJsonAdapter.ensureRegistered();
-// or, if a registry was generated:
-// JsonAdapterRegistry.initialize();
+JsonAdapterRegistry.initialize();
 
 // Serialize
 String json = Json.toJson(new Person("Alice", 30, List.of("dev", "java")));
@@ -42,13 +40,13 @@ Person p = Json.fromJson(json, Person.class);
     <dependency>
         <groupId>io.mktflow</groupId>
         <artifactId>just-json-core</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.5.0</version>
     </dependency>
     <!-- Annotation processor (compile-only) -->
     <dependency>
         <groupId>io.mktflow</groupId>
         <artifactId>just-json-processor</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.5.0</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -59,16 +57,19 @@ Person p = Json.fromJson(json, Person.class);
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <compilerArgs>
+                    <arg>-Ajson.registry.package=com.example.myapp</arg>
+                </compilerArgs>
                 <annotationProcessorPaths>
                     <path>
                         <groupId>io.mktflow</groupId>
                         <artifactId>just-json-processor</artifactId>
-                        <version>0.1.0-SNAPSHOT</version>
+                        <version>0.5.0</version>
                     </path>
                     <path>
                         <groupId>io.mktflow</groupId>
                         <artifactId>just-json-core</artifactId>
-                        <version>0.1.0-SNAPSHOT</version>
+                        <version>0.5.0</version>
                     </path>
                 </annotationProcessorPaths>
             </configuration>
@@ -77,20 +78,59 @@ Person p = Json.fromJson(json, Person.class);
 </build>
 ```
 
+The `-Ajson.registry.package` compiler option specifies the package where `JsonAdapterRegistry` is generated.
+
+Published via GitHub Packages — requires the `mktflow-io` repository in your `pom.xml`:
+
+```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <url>https://maven.pkg.github.com/mktflow-io/just-json</url>
+    </repository>
+</repositories>
+```
+
+## Field renaming with `@JsonProperty`
+
+Use `@JsonProperty` to map a record component to a different JSON key:
+
+```java
+@JsonRecord
+public record User(
+    @JsonProperty("first_name") String firstName,
+    @JsonProperty("last_name") String lastName,
+    @JsonProperty("is_active") boolean isActive
+) {}
+```
+
+```json
+{"first_name":"Alice","last_name":"Smith","is_active":true}
+```
+
+`@JsonProperty` also works on enum constants:
+
+```java
+public enum Status {
+    @JsonProperty("in_progress") IN_PROGRESS,
+    @JsonProperty("done") DONE
+}
+```
+
 ## Supported types
 
-| Type | Serialization | Deserialization |
-|------|:---:|:---:|
-| `int`, `long`, `double`, `float`, `boolean` | yes | yes |
-| `Integer`, `Long`, `Double`, `Float`, `Boolean` | yes | yes |
-| `String` | yes | yes |
-| `BigDecimal` | yes | yes |
-| `BigInteger` | yes | yes |
-| `Enum` | yes | yes |
-| `List<T>` | yes | yes |
-| `Map<String, V>` | yes | yes |
-| Nested `@JsonRecord` | yes | yes |
-| `null` | yes | yes |
+| Type                                            | Serialization  | Deserialization  |
+|-------------------------------------------------|:--------------:|:----------------:|
+| `int`, `long`, `double`, `float`, `boolean`     |      yes       |       yes        |
+| `Integer`, `Long`, `Double`, `Float`, `Boolean` |      yes       |       yes        |
+| `String`                                        |      yes       |       yes        |
+| `BigDecimal`                                    |      yes       |       yes        |
+| `BigInteger`                                    |      yes       |       yes        |
+| `Enum`                                          |      yes       |       yes        |
+| `List<T>`                                       |      yes       |       yes        |
+| `Map<String, V>`                                |      yes       |       yes        |
+| Nested `@JsonRecord`                            |      yes       |       yes        |
+| `null`                                          |      yes       |       yes        |
 
 ## Java modules (JPMS)
 
@@ -138,7 +178,7 @@ just-json/
 
 ```bash
 sdk env          # Java 25 (GraalVM)
-mvn clean test   # build + run 52 tests
+mvn clean test   # build + run 62 tests
 ```
 
 ## Requirements
